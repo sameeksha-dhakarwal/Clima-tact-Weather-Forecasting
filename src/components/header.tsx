@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import { Sun, Moon } from "lucide-react";
+import CitySearch from "./ui/city-search";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -19,26 +20,30 @@ const Header = () => {
           />
         </Link>
 
-        <div
-          role="button"
-          tabIndex={0}
-          aria-label="Toggle theme"
-          onClick={toggleTheme}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              toggleTheme();
-            }
-          }}
-          className={`flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 transition-transform duration-500 select-none ${
-            isDark ? "rotate-180" : "rotate-0"
-          }`}
-        >
-          {isDark ? (
-            <Sun className="h-6 w-6 text-yellow-500 transition-all" />
-          ) : (
-            <Moon className="h-6 w-6 text-blue-500 transition-all" />
-          )}
+        <div className="flex items-center gap-3">
+          <CitySearch />
+
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleTheme();
+              }
+            }}
+            className={`flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 transition-transform duration-500 select-none ${
+              isDark ? "rotate-180" : "rotate-0"
+            }`}
+          >
+            {isDark ? (
+              <Sun className="h-6 w-6 text-yellow-500 transition-all" />
+            ) : (
+              <Moon className="h-6 w-6 text-blue-500 transition-all" />
+            )}
+          </div>
         </div>
       </div>
     </header>
