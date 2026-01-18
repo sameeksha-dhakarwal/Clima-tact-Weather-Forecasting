@@ -1,73 +1,197 @@
-# React + TypeScript + Vite
+# Clima-tact 🌦️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern weather dashboard built with **React + Vite + TypeScript**, powered by the **OpenWeather API**. Includes **current weather**, **hourly chart**, **5-day forecast**, **city search**, **favorites**, **recent searches**, and **light/dark theme**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### Weather
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Current weather for your location
+* Hourly temperature (chart)
+* 5-day forecast (daily summary)
+* Weather details (sunrise/sunset, wind, humidity, etc.)
+* Reverse geocoding (show city name from coordinates)
 
-## Expanding the ESLint configuration
+### Search
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* City search via OpenWeather Geocoding API
+* Command palette style search dialog
+* Sections:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+  * Suggestions
+  * Recent searches
+  * Favorites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Favorites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* Add/remove favorite cities
+* Persists via `localStorage`
+* Quick access cards with current temp + conditions
+
+### Search History
+
+* Stores recent searches (with timestamp)
+* Clear history option
+* Persists via `localStorage`
+
+### Theme
+
+* Light/Dark toggle
+* Persists via `localStorage`
+* `ThemeProvider` toggles `dark`/`light` class on the `<html>` element
+
+---
+
+## Tech Stack
+
+* React + Vite + TypeScript
+* Tailwind CSS
+* shadcn/ui
+* TanStack React Query
+* OpenWeather APIs
+
+  * Current weather: `/data/2.5/weather`
+  * Forecast: `/data/2.5/forecast`
+  * Geocoding: `/geo/1.0/direct`, `/geo/1.0/reverse`
+* Recharts
+* Lucide Icons
+* Sonner (toasts)
+
+---
+
+## Project Structure
+
+```bash
+clima-tact/
+├─ public/
+│  ├─ Dark.png
+│  ├─ Light.png
+│  └─ ...
+├─ src/
+│  ├─ api/
+│  │  ├─ config.ts
+│  │  ├─ types.ts
+│  │  └─ weather.ts
+│  ├─ components/
+│  │  ├─ ui/
+│  │  │  ├─ alert.tsx
+│  │  │  ├─ button.tsx
+│  │  │  ├─ card.tsx
+│  │  │  ├─ command.tsx
+│  │  │  ├─ dialog.tsx
+│  │  │  ├─ scroll-area.tsx
+│  │  │  ├─ skeleton.tsx
+│  │  │  ├─ sonner.tsx
+│  │  │  ├─ layout.tsx
+│  │  │  ├─ city-search.tsx
+│  │  │  ├─ current-weather.tsx
+│  │  │  ├─ hourly-temperature.tsx
+│  │  │  ├─ weather-details.tsx
+│  │  │  ├─ weather-forecast.tsx
+│  │  │  ├─ favorite-button.tsx
+│  │  │  └─ favorite-cities.tsx
+│  │  └─ header.tsx
+│  ├─ context/
+│  │  └─ theme-provider.tsx
+│  ├─ hooks/
+│  │  ├─ use-weather.ts
+│  │  ├─ use-geolocation.ts
+│  │  ├─ use-local-storage.ts
+│  │  ├─ use-search-history.ts
+│  │  └─ use-favorite.ts
+│  ├─ pages/
+│  │  ├─ weather-dashboard.tsx
+│  │  └─ city-page.tsx
+│  ├─ App.tsx
+│  ├─ main.tsx
+│  └─ index.css
+├─ components.json
+├─ tailwind.config.js
+├─ tsconfig.json
+├─ tsconfig.app.json
+├─ vite.config.ts
+├─ package.json
+└─ README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment Variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env` file in the project root (same level as `package.json`):
+
+```env
+VITE_OPENWEATHER_API_KEY=your_openweather_api_key_here
 ```
+
+Notes:
+
+* The variable must start with `VITE_` (Vite requirement).
+* Restart the dev server after editing `.env`.
+
+---
+
+## Getting Started
+
+### 1) Clone
+
+```bash
+git clone https://github.com/<your-username>/clima-tact.git
+cd clima-tact
+```
+
+### 2) Install dependencies
+
+```bash
+npm install
+```
+
+### 3) Add API key
+
+Create `.env`:
+
+```env
+VITE_OPENWEATHER_API_KEY=your_openweather_api_key_here
+```
+
+### 4) Run
+
+```bash
+npm run dev
+```
+
+Open:
+
+```bash
+http://localhost:5173/
+```
+
+---
+
+## Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## How It Works (High Level)
+
+### Weather data flow
+
+* `useGeolocation()` gets coordinates
+* `useWeatherQuery()` → current weather
+* `useForecastQuery()` → forecast data
+* `useReverseGeocodeQuery()` → city name
+
+### Search flow
+
+* CitySearch opens command dialog
+* `useLocationSearch(query)` calls `/direct`
+* Selecting a city navigates to:
+  `/city/:name?lat=...&lon=...`
+*
