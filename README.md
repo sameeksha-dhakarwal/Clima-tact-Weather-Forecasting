@@ -1,8 +1,9 @@
 # Clima-tact 🌦️
 ---
-Link: https://clima-tact.netlify.app/
+
 A modern weather dashboard built with **React + Vite + TypeScript**, powered by the **OpenWeather API**. Includes **current weather**, **hourly chart**, **5-day forecast**, **city search**, **favorites**, **recent searches**, and **light/dark theme**.
 
+Link: https://clima-tact.netlify.app/
 ---
 
 ## Features
