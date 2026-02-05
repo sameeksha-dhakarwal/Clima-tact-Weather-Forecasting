@@ -66,28 +66,26 @@ const CitySearch = () => {
 
           {favorites.length > 0 && (
             <CommandGroup heading="Favourites">
-              {favorites.map((location) => {
-                return (
-                  <CommandItem
-                    key={location.id}
-                    value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
-                    onSelect={handleSelect}
-                  >
-                    <Star className="mr-2 h-4 w-4 text-yellow-500" />
-                    <span>{location.name}</span>
+              {favorites.map((location) => (
+                <CommandItem
+                  key={location.id}
+                  value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
+                  onSelect={handleSelect}
+                >
+                  <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                  <span>{location.name}</span>
 
-                    {location.state && (
-                      <span className="text-sm text-muted-foreground">
-                        , {location.state}
-                      </span>
-                    )}
-
+                  {location.state && (
                     <span className="text-sm text-muted-foreground">
-                      , {location.country}
+                      , {location.state}
                     </span>
-                  </CommandItem>
-                );
-              })}
+                  )}
+
+                  <span className="text-sm text-muted-foreground">
+                    , {location.country}
+                  </span>
+                </CommandItem>
+              ))}
             </CommandGroup>
           )}
 
@@ -107,32 +105,38 @@ const CitySearch = () => {
                   </Button>
                 </div>
 
-                {history.map((location) => {
-                  return (
-                    <CommandItem
-                      key={`${location.lat}-${location.lon}`}
-                      value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
-                      onSelect={handleSelect}
-                    >
-                      <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>{location.name}</span>
+                {history.map((location) => (
+                  <CommandItem
+                    key={`${location.lat}-${location.lon}`}
+                    value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
+                    onSelect={handleSelect}
+                  >
+                    <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span>{location.name}</span>
 
-                      {location.state && (
-                        <span className="text-sm text-muted-foreground">
-                          , {location.state}
-                        </span>
-                      )}
-
+                    {location.state && (
                       <span className="text-sm text-muted-foreground">
-                        , {location.country}
+                        , {location.state}
                       </span>
+                    )}
 
-                      <span className="ml-auto text-xs text-muted-foreground">
-                        {format(location.searchedAt, "MMM d, h:mm a")}
-                      </span>
-                    </CommandItem>
-                  );
-                })}
+                    <span className="text-sm text-muted-foreground">
+                      , {location.country}
+                    </span>
+
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      {(() => {
+                        const ts =
+                          typeof location.searchedAt === "number"
+                            ? location.searchedAt
+                            : Number(location.searchedAt);
+
+                        if (!Number.isFinite(ts)) return "";
+                        return format(new Date(ts), "MMM d, h:mm a");
+                      })()}
+                    </span>
+                  </CommandItem>
+                ))}
               </CommandGroup>
             </>
           )}
@@ -148,29 +152,27 @@ const CitySearch = () => {
 
             {locations &&
               locations.length > 0 &&
-              locations.map((location) => {
-                return (
-                  <CommandItem
-                    key={`${location.lat}-${location.lon}`}
-                    value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
-                    onSelect={handleSelect}
-                  >
-                    <Search className="mr-2 h-4 w-4" />
-                    <span>{location.name}</span>
+              locations.map((location) => (
+                <CommandItem
+                  key={`${location.lat}-${location.lon}`}
+                  value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
+                  onSelect={handleSelect}
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  <span>{location.name}</span>
 
-                    {location.state && (
-                      <span className="text-sm text-muted-foreground">
-                        {" "}
-                        {location.state}
-                      </span>
-                    )}
-
+                  {location.state && (
                     <span className="text-sm text-muted-foreground">
-                      , {location.country}
+                      {" "}
+                      {location.state}
                     </span>
-                  </CommandItem>
-                );
-              })}
+                  )}
+
+                  <span className="text-sm text-muted-foreground">
+                    , {location.country}
+                  </span>
+                </CommandItem>
+              ))}
 
             <CommandItem>Calendar</CommandItem>
           </CommandGroup>

@@ -1,14 +1,23 @@
 import { API_CONFIG } from "./config";
-import type { Coordinates, WeatherData, ForecastData, GeocodingResponse } from "./types";
+import type {
+  Coordinates,
+  WeatherData,
+  ForecastData,
+  GeocodingResponse,
+} from "./types";
 
 class WeatherAPI {
-  private createUrl(
-    endpoint: string,
-    params: Record<string, string | number>
-  ) {
+  private createUrl(endpoint: string, params: Record<string, string | number>) {
+    // Helpful debug: if this prints undefined, your .env key isn't loaded
+    if (!API_CONFIG.API_KEY) {
+      console.error("Missing API key: VITE_OPENWEATHER_API_KEY is not set.");
+    }
+
     const searchParams = new URLSearchParams({
       appid: API_CONFIG.API_KEY,
-      ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])),
+      ...Object.fromEntries(
+        Object.entries(params).map(([k, v]) => [k, String(v)])
+      ),
     });
 
     return `${endpoint}?${searchParams.toString()}`;
@@ -18,7 +27,15 @@ class WeatherAPI {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`Weather API Error: ${response.status} ${response.statusText}`);
+      // Log the real OpenWeather error message for debugging
+      const body = await response.text();
+      console.log("FAILED URL:", url);
+      console.log("FAILED STATUS:", response.status, response.statusText);
+      console.log("FAILED BODY:", body);
+
+      throw new Error(
+        `Weather API Error: ${response.status} ${response.statusText}`
+      );
     }
 
     return (await response.json()) as T;
@@ -55,14 +72,13 @@ class WeatherAPI {
   }
 
   async searchLocations(query: string): Promise<GeocodingResponse[]> {
-  const url = this.createUrl(`${API_CONFIG.GEO_URL}/direct`, {
-    q: query,
-    limit: "5",
-  });
+    const url = this.createUrl(`${API_CONFIG.GEO_URL}/direct`, {
+      q: query,
+      limit: 5,
+    });
 
-  return this.fetchData<GeocodingResponse[]>(url);
-}
-
+    return this.fetchData<GeocodingResponse[]>(url);
+  }
 }
 
 export const weatherAPI = new WeatherAPI();
